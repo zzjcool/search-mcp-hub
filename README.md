@@ -37,7 +37,7 @@ Key differences found during reverse engineering:
 ## Install
 
 ```bash
-# Unified hub — recommended
+# Unified hub — recommended (npm install -g search-mcp-hub also works, then drop the npx)
 npx search-mcp-hub login cursor         # one-time browser logins
 npx search-mcp-hub login codebuddy
 npx search-mcp-hub use cursor           # set default provider (optional)

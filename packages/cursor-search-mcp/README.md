@@ -27,12 +27,17 @@ Standalone MCP server that extracts Cursor's **web search** into a reusable tool
 ## Install
 
 ```bash
-# from npm (after publish)
-npx cursor-search-mcp
+# from npm — zero install, on demand
+npx -y cursor-search-mcp login          # one-time browser login
+npx -y cursor-search-mcp search "query"  # one-shot search
+
+# or install globally for the command everywhere
+npm install -g cursor-search-mcp
+cursor-search-mcp login
 
 # or from source
-git clone https://github.com/zzjcool/cursor-search-mcp
-cd cursor-search-mcp
+git clone https://github.com/zzjcool/search-mcp-hub
+cd search-mcp-hub/packages/cursor-search-mcp
 ```
 
 ## Configuration

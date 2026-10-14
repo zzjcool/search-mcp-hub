@@ -22,25 +22,50 @@ Credentials are **inherited** from the standalone packages / CLIs — if you alr
 
 ## Install
 
+Two ways to use:
+
+**A. Global install (recommended — gives you the `search-mcp-hub` command everywhere):**
+
 ```bash
-# MCP config (pi / any stdio client)
+npm install -g search-mcp-hub
+
+search-mcp-hub login cursor          # one-time browser logins
+search-mcp-hub login codebuddy
+search-mcp-hub status                # check login state of both providers
+search-mcp-hub search "mcp spec changes" -p codebuddy   # one-shot CLI search
+```
+
+**B. No install — npx on demand:**
+
+```bash
+npx -y search-mcp-hub login cursor
+npx -y search-mcp-hub search "mcp spec changes"
+```
+
+MCP config (pi / any stdio client) — global install makes startup faster (no npx fetch check):
+
+```json
+{
+  "mcpServers": {
+    "search-hub": { "type": "stdio", "command": "search-mcp-hub" }
+  }
+}
+```
+
+Or with npx (zero-install):
+
+```json
 {
   "mcpServers": {
     "search-hub": { "type": "stdio", "command": "npx", "args": ["-y", "search-mcp-hub"] }
   }
 }
+```
 
-# One-time logins
-npx search-mcp-hub login cursor
-npx search-mcp-hub login codebuddy
+Default provider (persisted to `~/.search-mcp-hub/provider`):
 
-# Default provider (persisted to ~/.search-mcp-hub/provider)
-npx search-mcp-hub use cursor
-
-# CLI one-shots
-npx search-mcp-hub search "mcp spec 2026 changes" -p cursor
-npx search-mcp-hub fetch https://example.com
-npx search-mcp-hub status
+```bash
+search-mcp-hub use cursor
 ```
 
 Provider routing order: per-call `provider` argument > `SEARCH_HUB_PROVIDER` env > persisted `use` choice > auto (first logged-in provider).
