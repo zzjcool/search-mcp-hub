@@ -2,12 +2,15 @@
 
 Coding agents' web search, extracted into standalone MCP tools.
 
-One repo, one shared architecture, one npm package per provider:
+One repo, one shared architecture — a unified multi-provider package plus thin per-provider packages:
 
-| Package | Provider | How it works |
-|---------|----------|--------------|
+| Package | Providers | How it works |
+|---------|-----------|--------------|
+| [`search-mcp-hub`](packages/search-mcp-hub) | **Cursor + CodeBuddy in one server** | One MCP server, provider-routed tools: `web_search {searchTerm, provider?}` (per-call routing), `web_fetch`, `search_status`, `search_login`. CLI: `login <p>` / `use <p>` / `search <q> [-p p]` / `fetch` / `status`. Credentials inherited from the per-provider packages / CLIs. |
 | [`cursor-search-mcp`](packages/cursor-search-mcp) | Cursor | Reverse-engineered `RunSSE` + `BidiAppend` protocol client — runs the real agent-loop server-side search, no `cursor-agent` binary. `login` / `status` / `search` CLI + 4 MCP tools. |
 | [`codebuddy-search-mcp`](packages/codebuddy-search-mcp) | CodeBuddy (Tencent) | Direct HTTP API (`/agenttool/v1/search` + `/webfetch`), OAuth browser login, `pi mcp login`-ready HTTP serve mode. `login` / `status` / `search` / `fetch` / `serve` CLI + 3 MCP tools. |
+
+**Start with `search-mcp-hub`** — it covers both providers behind one MCP config. The per-provider packages remain for minimal single-purpose setups.
 
 ## Why
 
@@ -34,11 +37,15 @@ Key differences found during reverse engineering:
 ## Install
 
 ```bash
-# Cursor provider
-npx cursor-search-mcp login          # one-time browser login
-npx cursor-search-mcp search "mcp spec changes"
+# Unified hub — recommended
+npx search-mcp-hub login cursor         # one-time browser logins
+npx search-mcp-hub login codebuddy
+npx search-mcp-hub use cursor           # set default provider (optional)
+npx search-mcp-hub search "mcp spec changes" -p codebuddy   # one-shot CLI
 
-# CodeBuddy provider
+# Or the per-provider packages
+npx cursor-search-mcp login
+npx cursor-search-mcp search "mcp spec changes"
 npx codebuddy-search-mcp login
 npx codebuddy-search-mcp search "mcp spec changes"
 ```
@@ -48,11 +55,23 @@ MCP config (pi / any stdio client):
 ```json
 {
   "mcpServers": {
+    "search-hub": { "type": "stdio", "command": "npx", "args": ["-y", "search-mcp-hub"] }
+  }
+}
+```
+
+Or per-provider servers if you prefer them separate:
+
+```json
+{
+  "mcpServers": {
     "cursor-search":   { "type": "stdio", "command": "npx", "args": ["-y", "cursor-search-mcp"] },
     "codebuddy-search": { "type": "stdio", "command": "npx", "args": ["-y", "codebuddy-search-mcp"] }
   }
 }
 ```
+
+Provider routing in the hub: per-call `provider` argument > `SEARCH_HUB_PROVIDER` env > persisted `search-mcp-hub use <p>` choice > auto (first logged-in provider).
 
 ## Caveats
 

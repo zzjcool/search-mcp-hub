@@ -4,6 +4,9 @@
 
 逆向自 CodeBuddy CLI v2.160.0（Bun SEA 二进制），全部端点均经实测验证。
 
+## Also see
+
+> Prefer one server for multiple providers? [search-mcp-hub](../search-mcp-hub) bundles Cursor + CodeBuddy search behind a single MCP config with per-call provider routing.
 ## 特性
 
 - **零依赖**：单文件 Node 脚本（`index.js`），无 npm install

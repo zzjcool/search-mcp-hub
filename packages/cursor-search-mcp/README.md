@@ -4,6 +4,9 @@ Standalone MCP server that extracts Cursor's **web search** into a reusable tool
 
 **Pure protocol client**: talks directly to `api2.cursor.sh` (`RunSSE` + `BidiAppend`, reverse-engineered from cursor-agent). No `cursor-agent` binary, no child processes, **zero npm dependencies**.
 
+## Also see
+
+> Prefer one server for multiple providers? [search-mcp-hub](../search-mcp-hub) bundles Cursor + CodeBuddy search behind a single MCP config with per-call provider routing.
 ## Features
 
 - 🔍 **Web search as a tool** — server-side Cursor web search (the same engine behind cursor-agent's `web_search`), returns summarized answers with source links
