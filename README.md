@@ -28,7 +28,7 @@ Key differences found during reverse engineering:
 
 ## Roadmap
 
-- [ ] Single unified package `search-mcp-hub`: one MCP server exposing `search` / `fetch` with provider auto-routing (cursor + codebuddy + future providers), one shared login state
+- [x] Single unified package `search-mcp-hub`: one MCP server exposing `search` / `fetch` with provider auto-routing (cursor + codebuddy + future providers), one shared login state
 - [ ] More providers (Windsurf, Copilot CLI, …) — same pattern: reverse the search path, extract it, verify end-to-end
 
 ## Install

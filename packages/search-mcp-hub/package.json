@@ -1,0 +1,40 @@
+{
+  "name": "search-mcp-hub",
+  "version": "1.0.0",
+  "description": "One MCP server, multiple coding-agent search providers (Cursor + CodeBuddy). Pure protocol clients, zero deps, per-call provider routing.",
+  "bin": {
+    "search-mcp-hub": "./index.js"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "providers/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "web-search",
+    "cursor",
+    "codebuddy",
+    "search",
+    "model-context-protocol",
+    "mcp-server"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzjcool/search-mcp-hub.git",
+    "directory": "packages/search-mcp-hub"
+  },
+  "bugs": {
+    "url": "https://github.com/zzjcool/search-mcp-hub/issues"
+  },
+  "homepage": "https://github.com/zzjcool/search-mcp-hub#readme"
+}
