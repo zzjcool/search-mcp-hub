@@ -52,12 +52,20 @@ function tokenExpiresInMs(token) {
 }
 
 async function ensureToken() {
-  const apiKey = readApiKey();
-  if (!apiKey) throw new Error("未配置 Cursor API key（CURSOR_API_KEY 或 ~/.cursor-search-mcp/key）");
+  // 1. Cached token (from API key exchange OR browser OAuth) still valid → use it
   try {
     const d = JSON.parse(fs.readFileSync(TOKEN_FILE, "utf8"));
     if (d.accessToken && tokenExpiresInMs(d.accessToken) > 60_000) return d.accessToken;
   } catch {}
+  // 2. No cached token → need an API key to exchange (browser OAuth tokens are
+  //    only produced via startOAuthLogin/pollOAuthLogin; there is no refresh without a key)
+  const apiKey = readApiKey();
+  if (!apiKey) {
+    throw new Error(
+      "Cursor 未登录：无有效 token 且未配置 API key。" +
+        "运行 search-mcp-hub login cursor（浏览器 OAuth）或配置 CURSOR_API_KEY / ~/.cursor-search-mcp/key"
+    );
+  }
   const r = await fetch(`${API_BASE}/auth/exchange_user_api_key`, {
     method: "POST",
     headers: {

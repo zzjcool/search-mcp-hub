@@ -1,6 +1,6 @@
 {
   "name": "search-mcp-hub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One MCP server, multiple coding-agent search providers (Cursor + CodeBuddy). Pure protocol clients, zero deps, per-call provider routing.",
   "bin": {
     "search-mcp-hub": "./index.js"

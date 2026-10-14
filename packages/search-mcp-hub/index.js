@@ -319,6 +319,7 @@ async function cliMain(argv) {
     const p = rest[0];
     if (!validProvider(p)) {
       console.error("usage: search-mcp-hub login <cursor|codebuddy>");
+      if (p === "status" || !p) console.error("(login state is a separate command: search-mcp-hub status)");
       process.exit(1);
     }
     if (p === "codebuddy") {
