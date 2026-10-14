@@ -428,6 +428,35 @@ async function cliMain(argv) {
     }
   }
 
+  if (cmd === "version" || cmd === "--version" || cmd === "-v") {
+    console.log(VERSION);
+    // 顺带查 npm 最新版（有网时）
+    fetch("https://registry.npmjs.org/search-mcp-hub/latest")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.version) {
+          if (d.version !== VERSION) console.log(`latest: ${d.version} — upgrade: npm i -g search-mcp-hub@latest`);
+          else console.log("(up to date)");
+        }
+      })
+      .catch(() => {}); // 离线时静默
+    return;
+  }
+
+  if (cmd === "upgrade") {
+    // 自升级：npm i -g search-mcp-hub@latest
+    const { spawn } = require("node:child_process");
+    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+    console.log(`Upgrading search-mcp-hub (${VERSION} → latest)…`);
+    const child = spawn(npm, ["i", "-g", "search-mcp-hub@latest"], { stdio: "inherit" });
+    child.on("close", (code) => {
+      if (code === 0) console.log("✓ Done. Run 'search-mcp-hub version' to confirm.");
+      else console.error(`✗ npm exited with code ${code}`);
+      process.exit(code ?? 1);
+    });
+    return;
+  }
+
   cliHelp();
 }
 
@@ -441,6 +470,8 @@ Usage:
   search-mcp-hub use <cursor|codebuddy>      Set the default provider (persisted)
   search-mcp-hub search <q> [-p provider]    One-shot web search
   search-mcp-hub fetch <url>                 Fetch a page as markdown (codebuddy)
+  search-mcp-hub version                     Show version (+ check npm for updates)
+  search-mcp-hub upgrade                     Self-upgrade via npm (i -g search-mcp-hub@latest)
   search-mcp-hub help                        Show this help
 
 Providers:
@@ -456,7 +487,7 @@ Config:
 /* ---------------- entry ---------------- */
 
 const argv = process.argv.slice(2);
-const CLI_COMMANDS = new Set(["login", "status", "use", "search", "fetch", "help", "--help", "-h"]);
+const CLI_COMMANDS = new Set(["login", "status", "use", "search", "fetch", "version", "upgrade", "help", "--help", "--version", "-h", "-v"]);
 if (argv.length > 0 && CLI_COMMANDS.has(argv[0])) {
   cliMain(argv).catch((e) => {
     console.error(`✗ ${e.message}`);
